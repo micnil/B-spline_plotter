@@ -1,8 +1,8 @@
-function BezierCurve(d, c){
+function BezierCurve(d, c, m){
 	this.degree = d || 0;
 	this.numOfCtrlPoints = c || 0;
 	this.ctrlPoints = new Array();
-	this.minHeight = 3.0;
+	this.minDistance = m || 10.0;
 }
 
 
@@ -12,8 +12,7 @@ BezierCurve.prototype = {
 		//casteljau algorithm
 
 		var height = this.maxDistance();
-		console.log(height);
-		if (height < this.minHeight) {
+		if (height < this.minDistance) {
 			this.drawLine(this.ctrlPoints[0], this.ctrlPoints[this.numOfCtrlPoints-1]);
 		}
 		else {
@@ -37,7 +36,10 @@ BezierCurve.prototype = {
 
 
 			var leftBez = new BezierCurve();
+			leftBez.setMinDistance(this.minDistance);
+
 			var rightBez = new BezierCurve();
+			rightBez.setMinDistance(this.minDistance);
 
 			var n;
 			n=this.numOfCtrlPoints+1;
@@ -78,7 +80,7 @@ BezierCurve.prototype = {
 		// Create a Paper.js Path to draw a line into it:
 		var path = new paper.Path();
 		// Give the stroke a color
-		path.strokeColor = 'black';
+		path.strokeColor = 'red';
 		path.moveTo(p1);
 		path.lineTo(p2);
 
@@ -140,6 +142,11 @@ BezierCurve.prototype = {
 			var ctrlPoint = new paper.Path.Circle(this.ctrlPoints[i], 2);
 			ctrlPoint.fillColor = 'purple';
 		}
+	},
+
+	setMinDistance: function(minDistance){
+
+		this.minDistance=minDistance;
 	},
 
 }

@@ -1,34 +1,13 @@
-function BSplineCurve(d, c, s){
+function BSplineCurve(d, c, s, t){
 	this.degree = d || 0;
 	this.numOfCtrlPoints = c || 0;
 	this.knots = new Array();
 	this.ctrlPoints = new Array();
 	this.ctrlPointSize = s || 5;
+	this.tesselate = t || 10;
 }
 
 BSplineCurve.prototype = {
-
-
-	init: function(){
-		this.setDegree(3);
-		this.addKnot(0);
-		this.addKnot(0);
-		this.addKnot(0);
-		this.addKnot(0.5);
-		this.addKnot(1.5);
-		this.addKnot(2);
-		this.addKnot(2.9);
-		this.addKnot(3.0);
-		this.addKnot(3.5);
-		this.addKnot(3.5);
-
-		this.addCtrlPointCoords(0,0);
-		this.addCtrlPointCoords(20,50);
-		this.addCtrlPointCoords(150,60);
-		this.addCtrlPointCoords(390,300);
-		this.addCtrlPointCoords(50,400);
-		this.addCtrlPointCoords(100,20);
-	},
 
 	setDegree: function(d){
 		this.degree=d;
@@ -46,7 +25,7 @@ BSplineCurve.prototype = {
 
 	addCtrlPointCoords: function(x, y) {
 		this.ctrlPoints.push(new paper.Point(x,y));
-		this.numOfCtrlPoints++;
+		//this.numOfCtrlPoints++;
 	},
 
 	addCtrlPoint: function(paperPoint) {
@@ -88,8 +67,8 @@ BSplineCurve.prototype = {
 
 		for(var i = 0; i<(this.numOfCtrlPoints); i++){
 
-			this.ctrlPoints[i].x = this.ctrlPoints[i].x + WIDTH / 2;
-			this.ctrlPoints[i].y = -this.ctrlPoints[i].y + 4*HEIGHT / 5;
+			this.ctrlPoints[i].x = this.ctrlPoints[i].x + WIDTH / 3;
+			this.ctrlPoints[i].y = -this.ctrlPoints[i].y + 2*HEIGHT / 3;
 		}
 	},
 
@@ -98,14 +77,39 @@ BSplineCurve.prototype = {
 	var i;
 	for (i=this.degree; i< this.numOfCtrlPoints; i++) {
 		if (Math.abs(this.knots[i]-this.knots[i+1]) < 0.0001) continue;  // no segment, skip over
-		bezierCurve = this.extractBezier(i);        // extract the i-th Bezier curve
-		//bezierCurve.renderBezierPolygon();
-		bezierCurve.renderBezier();   // adaptively plot a Bezier curve 
+			bezierCurve = this.extractBezier(i);        // extract the i-th Bezier curve
+			//bezierCurve.renderBezierPolygon();
+			bezierCurve.renderBezier();   // adaptively plot a Bezier curve 
 	}
 
 
 	},
 
+	tesselateUp: function(){
+		if(this.tesselate>10){
+			this.tesselate=this.tesselate+5;
+		}
+		else if(this.tesselate<=10 && this.tesselate>0.5){
+			this.tesselate = this.tesselate+0.5;
+		}
+		else if(this.tesselate<=0.5){
+			this.tesselate = this.tesselate+0.1;
+		}
+		console.log(this.tesselate);
+	},
+	tesselateDown: function(){
+
+		if(this.tesselate>10){
+			this.tesselate=this.tesselate-5;
+		}
+		else if(this.tesselate<=10 && this.tesselate>0.5){
+			this.tesselate = this.tesselate-0.5;
+		}
+		else if(this.tesselate<=0.5 && this.tesselate>0.2){
+			this.tesselate = this.tesselate-0.1;
+		}
+		console.log(this.tesselate);
+	},
 
 	extractBezier: function(ind){
 		var i;
@@ -172,7 +176,7 @@ BSplineCurve.prototype = {
 			knots[j] = knots[k+1];
 		}
 
-
+		bezierCurve.setMinDistance(this.tesselate);
 		return bezierCurve;
 
 	},

@@ -2,3 +2,49 @@ body{
 	margin: 0 auto;
 	overflow: hidden;
 }
+
+textarea{
+	resize: both
+}
+
+#myCanvas{
+	background: #fff;
+	position: absolute;
+	z-index: 0;
+}
+
+#gui{
+	margin: 2px;
+	/*width:15%;	*/
+	display:inline;
+
+	text-align:center;
+	position: absolute; 
+	top:8px;
+	left:8px;
+	z-index: 2;
+	background: #F5F5F5;
+	color: #999;
+	border: 1px solid #1a1a1a;
+	textShadow: 1px 1px 0 #222;
+}
+
+.menutitle{
+	margin:0.2em;
+	padding:0.2em;
+}
+.menutext{
+	margin-top: 0.8em;
+	margin-bottom: 0.1em;
+	color: #999999;
+}
+.menubox{
+	margin-left: 3px;
+	text-align:center;
+	border-radius: 5px;
+	float:left;
+	overflow:hidden;
+    white-space:nowrap;
+    display:inline-block;
+
+}

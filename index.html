@@ -5,6 +5,7 @@
 	<script type="text/javascript" src="paper/dist/paper-full.js"></script>
 	<script type="text/javascript" src="src/BezierCurve.js"></script>
 	<script type="text/javascript" src="src/BSplineCurve.js"></script>
+    <script type="text/javascript" src="src/CanvasManager.js"></script>
 	<script type="text/javascript" src="src/main.js"></script>
 
 	</script>
@@ -14,17 +15,14 @@
 </head>
 <body>
 
-</body>
-</html>
-
-
-<!DOCTYPE html>
-<html>
-<head>
-
-
-</head>
-<body>
 	<canvas id="myCanvas" resize></canvas>
+
+	<div id="gui">
+        <div class="menubox">
+            <p class="menutitle">load B-spline txt file</p>
+            <textarea  id="fileInput" rows="10" cols="30" placeholder="copy text file here"></textarea>
+            <button type="button" id="loadBtn" class="myButton" value="load">load</button>
+        </div>
+    </div>
 </body>
 </html>
