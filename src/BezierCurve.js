@@ -3,20 +3,20 @@ function BezierCurve(d, c, m){
 	this.numOfCtrlPoints = c || 0;
 	this.ctrlPoints = new Array();
 	this.minDistance = m || 10.0;
-	this.drawSamplingPoints = true;
 }
 
 
 BezierCurve.prototype = {
 
-	renderBezier: function(){
+	renderAdaptive: function(showSamplingPoints){
 		//casteljau algorithm
 
 		var height = this.maxDistance();
 		if (height < this.minDistance) {
 			this.drawLine(this.ctrlPoints[0], this.ctrlPoints[this.numOfCtrlPoints-1]);
-			if(this.drawSamplingPoints){
-				this.drawPoints(this.ctrlPoints[0], this.ctrlPoints[this.numOfCtrlPoints-1]);
+			if(showSamplingPoints){
+				this.drawPoint(this.ctrlPoints[0]);
+				this.drawPoint(this.ctrlPoints[this.numOfCtrlPoints-1]);
 			}
 		}
 		else {
@@ -58,11 +58,56 @@ BezierCurve.prototype = {
 				n--;
 			}	
 	
-			leftBez.renderBezier();
-			rightBez.renderBezier();
+			leftBez.renderAdaptive(showSamplingPoints);
+			rightBez.renderAdaptive(showSamplingPoints);
 		}
 
 	},
+
+	renderUniform: function(numOfSamplingPoints, showSamplingPoints){
+
+		var samplingStep = 1/numOfSamplingPoints;
+
+		var samplingPoints = new Array();
+		var t=0;
+
+		//this.renderCtrlPoints();
+		//this.renderBezierPolygon();
+
+		while(t<=1.05){
+
+			var x = this.ctrlPoints[0].x * this.B1(t) + this.ctrlPoints[1].x * this.B2(t); 
+			var y = this.ctrlPoints[0].y * this.B1(t) + this.ctrlPoints[1].y * this.B2(t);
+
+			if(this.ctrlPoints[2]){
+				x = x + this.ctrlPoints[2].x * this.B3(t);
+				y = y + this.ctrlPoints[2].y * this.B3(t);
+			}
+
+			if(this.ctrlPoints[3]){
+				x = x + this.ctrlPoints[3].x * this.B4(t);
+				y = y + this.ctrlPoints[3].y * this.B4(t);
+			}
+
+			samplingPoints.push(new paper.Point(x,y));
+
+			t=t+samplingStep;
+		}
+		for(var i = 0; i<samplingPoints.length-1; i++){
+			this.drawLine(samplingPoints[i],samplingPoints[i+1])
+		}
+		if(showSamplingPoints){
+			for(var i = 0; i<samplingPoints.length; i++){
+				this.drawPoint(samplingPoints[i]);
+			}
+		}
+
+	},
+
+	B1: function(t) { return t*t*t },
+	B2: function(t) { return 3*t*t*(1-t) },
+	B3: function(t) { return 3*t*(1-t)*(1-t) },
+	B4: function(t) { return (1-t)*(1-t)*(1-t) },
 
 	getMidPoint: function(p1, p2){
 		var midPoint;
@@ -153,13 +198,9 @@ BezierCurve.prototype = {
 		this.minDistance=minDistance;
 	},
 
-	drawPoints: function(p1, p2){
-			var point = new paper.Path.Circle(p1, 1);
+	drawPoint: function(p){
+			var point = new paper.Path.Circle(p, 1);
 			point.fillColor = 'purple';
-
-			var point = new paper.Path.Circle(p2, 1);
-			point.fillColor = 'purple';
-
 	},
 
 }

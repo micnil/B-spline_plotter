@@ -72,14 +72,17 @@ BSplineCurve.prototype = {
 		}
 	},
 
-	adaptiveRender: function(){
+	adaptiveRender: function(showSamplingPoints, toggleAdaptive){
 	var bezierCurve;
 	var i;
 	for (i=this.degree; i< this.numOfCtrlPoints; i++) {
 		if (Math.abs(this.knots[i]-this.knots[i+1]) < 0.0001) continue;  // no segment, skip over
 			bezierCurve = this.extractBezier(i);        // extract the i-th Bezier curve
-			//bezierCurve.renderBezierPolygon();
-			bezierCurve.renderBezier();   // adaptively plot a Bezier curve 
+			if(toggleAdaptive)
+				bezierCurve.renderAdaptive(showSamplingPoints);   // adaptively plot a Bezier curve 
+			else{
+				bezierCurve.renderUniform(this.tesselate, showSamplingPoints);
+			}
 	}
 
 
@@ -89,11 +92,8 @@ BSplineCurve.prototype = {
 		if(this.tesselate>10){
 			this.tesselate=this.tesselate+5;
 		}
-		else if(this.tesselate<=10 && this.tesselate>0.5){
-			this.tesselate = this.tesselate+0.5;
-		}
-		else if(this.tesselate<=0.5){
-			this.tesselate = this.tesselate+0.1;
+		else if(this.tesselate<=10 && this.tesselate>0){
+			this.tesselate = this.tesselate+1;
 		}
 		console.log(this.tesselate);
 	},
@@ -102,11 +102,8 @@ BSplineCurve.prototype = {
 		if(this.tesselate>10){
 			this.tesselate=this.tesselate-5;
 		}
-		else if(this.tesselate<=10 && this.tesselate>0.5){
-			this.tesselate = this.tesselate-0.5;
-		}
-		else if(this.tesselate<=0.5 && this.tesselate>0.2){
-			this.tesselate = this.tesselate-0.1;
+		else if(this.tesselate<=10 && this.tesselate>1.5){
+			this.tesselate = this.tesselate-1;
 		}
 		console.log(this.tesselate);
 	},

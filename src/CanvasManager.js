@@ -8,6 +8,8 @@ function CanvasManager(canvas, theBSplineCurve){
 
 	//states
 	this.showControlPolygon = true;
+	this.showSamplingPoints = false;
+	this.toggleAdaptive = true;
 
 	window.addEventListener( "keydown", this.keyManager.bind(this), false );
 
@@ -45,7 +47,7 @@ CanvasManager.prototype = {
 			this.theBSplineCurve.drawControlPolygon();
 			this.theBSplineCurve.drawControlPoints();
 		}
-		this.theBSplineCurve.adaptiveRender();
+		this.theBSplineCurve.adaptiveRender(this.showSamplingPoints, this.toggleAdaptive);
 
 		// Draw the view now:
 		paper.view.draw();
@@ -101,7 +103,6 @@ CanvasManager.prototype = {
 			this.renderBSpline();	
 		}
 		if(e.keyCode == 67){
-			console.log("hej");
 			if(this.showControlPolygon){
 				this.showControlPolygon = false;
 				this.clearCanvas();
@@ -109,6 +110,30 @@ CanvasManager.prototype = {
 			}
 			else{
 				this.showControlPolygon = true;
+				this.clearCanvas();
+				this.renderBSpline();
+			}
+		}
+		if(e.keyCode == 80){
+			if(this.showSamplingPoints){
+				this.showSamplingPoints = false;
+				this.clearCanvas();
+				this.renderBSpline();
+			}
+			else{
+				this.showSamplingPoints = true;
+				this.clearCanvas();
+				this.renderBSpline();
+			}
+		}
+		if(e.keyCode == 65){
+			if(this.toggleAdaptive){
+				this.toggleAdaptive = false;
+				this.clearCanvas();
+				this.renderBSpline();
+			}
+			else{
+				this.toggleAdaptive = true;
 				this.clearCanvas();
 				this.renderBSpline();
 			}
