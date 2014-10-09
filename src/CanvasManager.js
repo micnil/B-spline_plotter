@@ -152,11 +152,17 @@ CanvasManager.prototype = {
 				this.renderBSpline();
 				this.adaptiveSign.innerHTML = "(a) Render mode: Uniform";
 			}
-			else{
+			else if(this.toggleRenderMode==2 && this.theBSplineCurve.degree == 3){
 				this.toggleRenderMode = 3;
 				this.clearCanvas();
 				this.renderBSpline();
 				this.adaptiveSign.innerHTML = "(a) Render mode: Brute force";
+			}
+			else{
+				this.toggleRenderMode = 1;
+				this.clearCanvas();
+				this.renderBSpline();
+				this.adaptiveSign.innerHTML = "(a) Render mode: Adaptive";
 			}
 		}
 	}
