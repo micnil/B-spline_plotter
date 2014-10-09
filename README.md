@@ -12,14 +12,14 @@ to plot a B-Spline, one must write the components in this way in to the textarea
 4. Control points, 1 point per row
 
 Example:
-3 
-6
+		3 
+		6
 
-0 0 0 0.5  1.5 2 2.9 3 3.5 3.5
+		0 0 0 0.5  1.5 2 2.9 3 3.5 3.5
 
-0 0 
-20 50 
-150 60 
-390 300
-50 400
-100 20 
+		0 0 
+		20 50 
+		150 60 
+		390 300
+		50 400
+		100 20 
