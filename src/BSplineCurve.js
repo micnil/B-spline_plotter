@@ -40,6 +40,7 @@ BSplineCurve.prototype = {
 
 		for(var i = 0; i<this.numOfCtrlPoints; i++){
 			var ctrlPoint = new paper.Path.Circle(this.ctrlPoints[i], this.ctrlPointSize);
+			ctrlPoint.selected=true;
 			ctrlPoint.fillColor = 'blue';
 		}
 
