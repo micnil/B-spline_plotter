@@ -12,6 +12,7 @@ to plot a B-Spline, one must write the components in this way in to the textarea
 4. Control points, 1 point per row
 
 Example:
+
 		3 
 		6
 
