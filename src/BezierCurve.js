@@ -3,6 +3,7 @@ function BezierCurve(d, c, m){
 	this.numOfCtrlPoints = c || 0;
 	this.ctrlPoints = new Array();
 	this.minDistance = m || 10.0;
+	this.drawSamplingPoints = true;
 }
 
 
@@ -14,6 +15,9 @@ BezierCurve.prototype = {
 		var height = this.maxDistance();
 		if (height < this.minDistance) {
 			this.drawLine(this.ctrlPoints[0], this.ctrlPoints[this.numOfCtrlPoints-1]);
+			if(this.drawSamplingPoints){
+				this.drawPoints(this.ctrlPoints[0], this.ctrlPoints[this.numOfCtrlPoints-1]);
+			}
 		}
 		else {
 
@@ -147,6 +151,15 @@ BezierCurve.prototype = {
 	setMinDistance: function(minDistance){
 
 		this.minDistance=minDistance;
+	},
+
+	drawPoints: function(p1, p2){
+			var point = new paper.Path.Circle(p1, 1);
+			point.fillColor = 'purple';
+
+			var point = new paper.Path.Circle(p2, 1);
+			point.fillColor = 'purple';
+
 	},
 
 }
