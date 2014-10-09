@@ -4,13 +4,21 @@ function CanvasManager(canvas, theBSplineCurve){
 
 	this.theBSplineCurve = theBSplineCurve;
 	this.loadBtn = document.getElementById('loadBtn');
+	this.adaptiveSign = document.getElementById('adaptive');
+	this.tesselationSign = document.getElementById('tesselation');
+	this.showSamplesSign = document.getElementById('showSamples');
+	this.showPolygonSign = document.getElementById('showPolygon');
 	this.loadBtn.addEventListener('click', this.loadBtnAction.bind(this),false);
 
 	//states
 	this.showControlPolygon = true;
 	this.showSamplingPoints = false;
-	this.toggleAdaptive = true;
+	this.toggleRenderMode = 1;
 
+	this.adaptiveSign.innerHTML = "(a) Render mode = Adaptive";
+	this.tesselationSign.innerHTML = "(+/-) Tesselation = " + this.theBSplineCurve.tesselate;  
+	this.showSamplesSign.innerHTML = "(p) Show samples = False";
+	this.showPolygonSign.innerHTML = "(c) Show control polygon = True ";
 	window.addEventListener( "keydown", this.keyManager.bind(this), false );
 
 }
@@ -47,7 +55,7 @@ CanvasManager.prototype = {
 			this.theBSplineCurve.drawControlPolygon();
 			this.theBSplineCurve.drawControlPoints();
 		}
-		this.theBSplineCurve.adaptiveRender(this.showSamplingPoints, this.toggleAdaptive);
+		this.theBSplineCurve.adaptiveRender(this.showSamplingPoints, this.toggleRenderMode);
 
 		// Draw the view now:
 		paper.view.draw();
@@ -91,27 +99,30 @@ CanvasManager.prototype = {
 	},
 
 	keyManager: function(e){
-		console.log(e.keyCode);
 		if(e.keyCode == 171){
 			this.theBSplineCurve.tesselateUp();
 			this.clearCanvas();
 			this.renderBSpline();
+			this.tesselationSign.innerHTML = "(+/-) Tesselation = " + this.theBSplineCurve.tesselate; 
 		}
 		if(e.keyCode == 173){
 			this.theBSplineCurve.tesselateDown();
 			this.clearCanvas();
-			this.renderBSpline();	
+			this.renderBSpline();
+			this.tesselationSign.innerHTML = "(+/-) Tesselation = " + this.theBSplineCurve.tesselate; 
 		}
 		if(e.keyCode == 67){
 			if(this.showControlPolygon){
 				this.showControlPolygon = false;
 				this.clearCanvas();
 				this.renderBSpline();
+				this.showPolygonSign.innerHTML = "(c) Show control polygon = False";
 			}
 			else{
 				this.showControlPolygon = true;
 				this.clearCanvas();
 				this.renderBSpline();
+				this.showPolygonSign.innerHTML = "(c) Show control polygon = True ";
 			}
 		}
 		if(e.keyCode == 80){
@@ -119,23 +130,33 @@ CanvasManager.prototype = {
 				this.showSamplingPoints = false;
 				this.clearCanvas();
 				this.renderBSpline();
+				this.showSamplesSign.innerHTML = "(p) Show samples = False";
 			}
 			else{
 				this.showSamplingPoints = true;
 				this.clearCanvas();
 				this.renderBSpline();
+				this.showSamplesSign.innerHTML = "(p) Show samples = True";
 			}
 		}
 		if(e.keyCode == 65){
-			if(this.toggleAdaptive){
-				this.toggleAdaptive = false;
+			if(this.toggleRenderMode==3){
+				this.toggleRenderMode = 1;
 				this.clearCanvas();
 				this.renderBSpline();
+				this.adaptiveSign.innerHTML = "(a) Render mode: Adaptive";
+			}
+			else if(this.toggleRenderMode==1){
+				this.toggleRenderMode = 2;
+				this.clearCanvas();
+				this.renderBSpline();
+				this.adaptiveSign.innerHTML = "(a) Render mode: Uniform";
 			}
 			else{
-				this.toggleAdaptive = true;
+				this.toggleRenderMode = 3;
 				this.clearCanvas();
 				this.renderBSpline();
+				this.adaptiveSign.innerHTML = "(a) Render mode: Brute force";
 			}
 		}
 	}

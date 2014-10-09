@@ -28,6 +28,14 @@ textarea{
 	border: 1px solid #1a1a1a;
 	textShadow: 1px 1px 0 #222;
 }
+#infoBox{
+	margin:10px;
+	width:18%;
+	position: absolute; 
+	right:0;
+	z-index: 2;
+	color: #0000FF;
+}
 
 .menutitle{
 	margin:0.2em;

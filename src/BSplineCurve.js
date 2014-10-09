@@ -72,27 +72,37 @@ BSplineCurve.prototype = {
 		}
 	},
 
-	adaptiveRender: function(showSamplingPoints, toggleAdaptive){
+	adaptiveRender: function(showSamplingPoints, toggleRenderMode){
 	var bezierCurve;
 	var i;
 	for (i=this.degree; i< this.numOfCtrlPoints; i++) {
 		if (Math.abs(this.knots[i]-this.knots[i+1]) < 0.0001) continue;  // no segment, skip over
 			bezierCurve = this.extractBezier(i);        // extract the i-th Bezier curve
-			if(toggleAdaptive)
-				bezierCurve.renderAdaptive(showSamplingPoints);   // adaptively plot a Bezier curve 
-			else{
-				bezierCurve.renderUniform(this.tesselate, showSamplingPoints);
-			}
+
+			switch(toggleRenderMode) {
+			    case 1:
+			        //here the tesselate value will be used as the approximation tolerance;
+					bezierCurve.renderAdaptive(this.tesselate, showSamplingPoints);
+			        break;
+			    case 2:
+			        //here the tesselate value will be used as number of samplingpoints
+					bezierCurve.renderUniform(this.tesselate, showSamplingPoints);
+			        break;
+			    case 3:
+			    	//This is a bad Brute force way of rendering, unstable
+			    	bezierCurve.renderBruteForce(this.tesselate, showSamplingPoints);
+			    	break;
+			} 
 	}
 
 
 	},
 
 	tesselateUp: function(){
-		if(this.tesselate>10){
+		if(this.tesselate>=10){
 			this.tesselate=this.tesselate+5;
 		}
-		else if(this.tesselate<=10 && this.tesselate>0){
+		else if(this.tesselate<10 && this.tesselate>0){
 			this.tesselate = this.tesselate+1;
 		}
 		console.log(this.tesselate);

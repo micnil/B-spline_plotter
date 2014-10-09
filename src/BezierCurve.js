@@ -2,17 +2,16 @@ function BezierCurve(d, c, m){
 	this.degree = d || 0;
 	this.numOfCtrlPoints = c || 0;
 	this.ctrlPoints = new Array();
-	this.minDistance = m || 10.0;
 }
 
 
 BezierCurve.prototype = {
 
-	renderAdaptive: function(showSamplingPoints){
+	renderAdaptive: function(tolerance, showSamplingPoints){
 		//casteljau algorithm
 
 		var height = this.maxDistance();
-		if (height < this.minDistance) {
+		if (height < tolerance) {
 			this.drawLine(this.ctrlPoints[0], this.ctrlPoints[this.numOfCtrlPoints-1]);
 			if(showSamplingPoints){
 				this.drawPoint(this.ctrlPoints[0]);
@@ -40,11 +39,7 @@ BezierCurve.prototype = {
 
 
 			var leftBez = new BezierCurve();
-			leftBez.setMinDistance(this.minDistance);
-
 			var rightBez = new BezierCurve();
-			rightBez.setMinDistance(this.minDistance);
-
 			var n;
 			n=this.numOfCtrlPoints+1;
 			for(var i = 0; n > 1; i=i+n){
@@ -58,24 +53,21 @@ BezierCurve.prototype = {
 				n--;
 			}	
 	
-			leftBez.renderAdaptive(showSamplingPoints);
-			rightBez.renderAdaptive(showSamplingPoints);
+			leftBez.renderAdaptive(tolerance, showSamplingPoints);
+			rightBez.renderAdaptive(tolerance, showSamplingPoints);
 		}
 
 	},
-
-	renderUniform: function(numOfSamplingPoints, showSamplingPoints){
+	//Brute force Sampling
+	renderBruteForce: function(numOfSamplingPoints, showSamplingPoints){
 
 		var samplingStep = 1/numOfSamplingPoints;
 
 		var samplingPoints = new Array();
 		var t=0;
-
-		//this.renderCtrlPoints();
-		//this.renderBezierPolygon();
-
-		while(t<=1.05){
-
+		console.log(this.ctrlPoints);
+		while(t<=1.0){
+			
 			var x = this.ctrlPoints[0].x * this.B1(t) + this.ctrlPoints[1].x * this.B2(t); 
 			var y = this.ctrlPoints[0].y * this.B1(t) + this.ctrlPoints[1].y * this.B2(t);
 
@@ -108,6 +100,45 @@ BezierCurve.prototype = {
 	B2: function(t) { return 3*t*t*(1-t) },
 	B3: function(t) { return 3*t*(1-t)*(1-t) },
 	B4: function(t) { return (1-t)*(1-t)*(1-t) },
+
+	renderUniform: function(numOfSamplingPoints, showSamplingPoints){
+
+		var samplingStep = 1/numOfSamplingPoints;
+
+		var samplingPoints = new Array();
+		var t=0;
+
+		while(t<=1.0){
+
+			var q = new Array();
+
+			for(var i = 0; i<this.numOfCtrlPoints; i++){
+				q.push(this.ctrlPoints[i]);
+			}
+
+			for(var k = 1; k<this.numOfCtrlPoints; k++){
+				for(var i = 0; i < this.numOfCtrlPoints-k; i++){
+					q[i].x = (1-t)*q[i].x + t*q[i+1].x;
+					q[i].y = (1-t)*q[i].y + t*q[i+1].y;
+				}
+			}
+
+			console.log(q[0]);
+			//------------------------------------
+			samplingPoints.push(new paper.Point(q[0].x,q[0].y));
+			t=t+samplingStep;
+		}
+
+		for(var i = 0; i<samplingPoints.length-1; i++){
+			this.drawLine(samplingPoints[i],samplingPoints[i+1])
+		}
+		if(showSamplingPoints){
+			for(var i = 0; i<samplingPoints.length; i++){
+				this.drawPoint(samplingPoints[i]);
+			}
+		}
+
+	},
 
 	getMidPoint: function(p1, p2){
 		var midPoint;
@@ -199,7 +230,7 @@ BezierCurve.prototype = {
 	},
 
 	drawPoint: function(p){
-			var point = new paper.Path.Circle(p, 1);
+			var point = new paper.Path.Circle(p, 1.5);
 			point.fillColor = 'purple';
 	},
 
