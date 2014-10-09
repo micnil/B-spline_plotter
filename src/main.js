@@ -17,6 +17,7 @@ function main(){
 	theBSplineCurve.centerAllPoints();
 	theBSplineCurve.drawControlPolygon();
 	theBSplineCurve.drawControlPoints();
+	theBSplineCurve.adaptiveRender();
 
 	// Draw the view now:
 	paper.view.draw();	

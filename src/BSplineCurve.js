@@ -10,22 +10,24 @@ BSplineCurve.prototype = {
 
 
 	init: function(){
-
 		this.setDegree(3);
-		//this.setNumOfCtrlPoints(4);
+		this.addKnot(0);
+		this.addKnot(0);
 		this.addKnot(0);
 		this.addKnot(0.5);
-		this.addKnot(1);
+		this.addKnot(1.5);
 		this.addKnot(2);
-		this.addKnot(3);
+		this.addKnot(2.9);
+		this.addKnot(3.0);
 		this.addKnot(3.5);
-		this.addKnot(4.5);
-		this.addKnot(5);
+		this.addKnot(3.5);
 
 		this.addCtrlPointCoords(0,0);
-		this.addCtrlPointCoords(10,50);
-		this.addCtrlPointCoords(30,10);
-		this.addCtrlPointCoords(100,100);
+		this.addCtrlPointCoords(20,50);
+		this.addCtrlPointCoords(150,60);
+		this.addCtrlPointCoords(390,300);
+		this.addCtrlPointCoords(50,400);
+		this.addCtrlPointCoords(100,20);
 	},
 
 	setDegree: function(d){
@@ -45,7 +47,6 @@ BSplineCurve.prototype = {
 	addCtrlPointCoords: function(x, y) {
 		this.ctrlPoints.push(new paper.Point(x,y));
 		this.numOfCtrlPoints++;
-
 	},
 
 	addCtrlPoint: function(paperPoint) {
@@ -88,26 +89,25 @@ BSplineCurve.prototype = {
 		for(var i = 0; i<(this.numOfCtrlPoints); i++){
 
 			this.ctrlPoints[i].x = this.ctrlPoints[i].x + WIDTH / 2;
-			this.ctrlPoints[i].y = -this.ctrlPoints[i].y + HEIGHT / 2;
+			this.ctrlPoints[i].y = -this.ctrlPoints[i].y + 4*HEIGHT / 5;
 		}
 	},
 
 	adaptiveRender: function(){
-
-	Point2d  bez[30];  // assume the degree is not greater than 29.
+	var bezierCurve;
 	var i;
-
-	for (i=bcr.degree; i< bcr.cntNum; i++) {
-		if (fabs(bcr.knots[i]-bcr.knots[i+1]) < 0.00001) continue;  // no segment, skip over
-		extractBezier (bez, i);        // extract the i-th Bezier curve
-		plotBezier(bez, bcr.degree);   // adaptively plot a Bezier curve 
+	for (i=this.degree; i< this.numOfCtrlPoints; i++) {
+		if (Math.abs(this.knots[i]-this.knots[i+1]) < 0.0001) continue;  // no segment, skip over
+		bezierCurve = this.extractBezier(i);        // extract the i-th Bezier curve
+		//bezierCurve.renderBezierPolygon();
+		bezierCurve.renderBezier();   // adaptively plot a Bezier curve 
 	}
 
 
 	},
 
 
-	exctractBezier: function(ind){
+	extractBezier: function(ind){
 		var i;
 		var j;
 		var bezierCurve = new BezierCurve();
@@ -115,7 +115,7 @@ BSplineCurve.prototype = {
 		var k = this.degree;
 		// copy one segment
 		for (i=ind-k; i<=ind; i++) {
-			bezierCurve.ctrlPoints.push(new paper.Point(this.ctrlPoints[i]));
+			bezierCurve.addCtrlPoint(new paper.Point(this.ctrlPoints[i]));
 		}
 
 		for (i=ind-k; i<= ind+k+1; i++) {
@@ -136,10 +136,10 @@ BSplineCurve.prototype = {
 
 			// update control points
 			for (i=0; i<j; i++) {
-				bezierCurve.ctrlPoints[i].x = ((knots[k+1+i]-knots[k])/(knots[k+i+1]-knots[i+1]))*cnt[i].x 
-						  + ((knots[k]-knots[i+1])/(knots[k+i+1]-knots[i+1]))*cnt[i+1].x;
-				bezierCurve.ctrlPoints[i].y = ((knots[k+1+i]-knots[k])/(knots[k+i+1]-knots[i+1]))*cnt[i].y 
-						  + ((knots[k]-knots[i+1])/(knots[k+i+1]-knots[i+1]))*cnt[i+1].y;
+				bezierCurve.ctrlPoints[i].x = ((knots[k+1+i]-knots[k])/(knots[k+i+1]-knots[i+1]))*bezierCurve.ctrlPoints[i].x 
+						  + ((knots[k]-knots[i+1])/(knots[k+i+1]-knots[i+1]))*bezierCurve.ctrlPoints[i+1].x;
+				bezierCurve.ctrlPoints[i].y = ((knots[k+1+i]-knots[k])/(knots[k+i+1]-knots[i+1]))*bezierCurve.ctrlPoints[i].y 
+						  + ((knots[k]-knots[i+1])/(knots[k+i+1]-knots[i+1]))*bezierCurve.ctrlPoints[i+1].y;
 			}
 			// update knots
 			for (i=0; i<j; i++)
@@ -161,10 +161,10 @@ BSplineCurve.prototype = {
 
 			// update control points
 			for (i=k; i>=j-k; i--) {
-				bezierCurve.ctrlPoints[i].x = ((knots[k+i]-knots[k+1])/(knots[k+i]-knots[i]))*cnt[i-1].x 
-						  + ((knots[k+1]-knots[i])/(knots[k+i]-knots[i]))*cnt[i].x;
-				bezierCurve.ctrlPoints[i].y = ((knots[k+i]-knots[k+1])/(knots[k+i]-knots[i]))*cnt[i-1].y 
-						  + ((knots[k+1]-knots[i])/(knots[k+i]-knots[i]))*cnt[i].y;
+				bezierCurve.ctrlPoints[i].x = ((knots[k+i]-knots[k+1])/(knots[k+i]-knots[i]))*bezierCurve.ctrlPoints[i-1].x 
+						  + ((knots[k+1]-knots[i])/(knots[k+i]-knots[i]))*bezierCurve.ctrlPoints[i].x;
+				bezierCurve.ctrlPoints[i].y = ((knots[k+i]-knots[k+1])/(knots[k+i]-knots[i]))*bezierCurve.ctrlPoints[i-1].y 
+						  + ((knots[k+1]-knots[i])/(knots[k+i]-knots[i]))*bezierCurve.ctrlPoints[i].y;
 			}
 			// update knots
 			for (i=k+k+1; i>j; i--)
