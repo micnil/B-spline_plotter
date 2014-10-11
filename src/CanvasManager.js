@@ -55,7 +55,7 @@ CanvasManager.prototype = {
 			this.theBSplineCurve.drawControlPolygon();
 			this.theBSplineCurve.drawControlPoints();
 		}
-		this.theBSplineCurve.adaptiveRender(this.showSamplingPoints, this.toggleRenderMode);
+		this.theBSplineCurve.renderBSpline(this.showSamplingPoints, this.toggleRenderMode);
 
 		// Draw the view now:
 		paper.view.draw();

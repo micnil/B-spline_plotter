@@ -40,7 +40,6 @@ BSplineCurve.prototype = {
 
 		for(var i = 0; i<this.numOfCtrlPoints; i++){
 			var ctrlPoint = new paper.Path.Circle(this.ctrlPoints[i], this.ctrlPointSize);
-			ctrlPoint.selected=true;
 			ctrlPoint.fillColor = 'blue';
 		}
 
@@ -73,7 +72,7 @@ BSplineCurve.prototype = {
 		}
 	},
 
-	adaptiveRender: function(showSamplingPoints, toggleRenderMode){
+	renderBSpline: function(showSamplingPoints, toggleRenderMode){
 	var bezierCurve;
 	var i;
 	for (i=this.degree; i< this.numOfCtrlPoints; i++) {
