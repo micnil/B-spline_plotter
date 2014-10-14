@@ -8,7 +8,9 @@ function CanvasManager(canvas, theBSplineCurve){
 	this.tesselationSign = document.getElementById('tesselation');
 	this.showSamplesSign = document.getElementById('showSamples');
 	this.showPolygonSign = document.getElementById('showPolygon');
+	this.loadFile = document.getElementById('loadFile');
 	this.loadBtn.addEventListener('click', this.loadBtnAction.bind(this),false);
+	this.loadFile.addEventListener('change', this.loadFileAction.bind(this),false);
 
 	//states
 	this.showControlPolygon = true;
@@ -16,7 +18,7 @@ function CanvasManager(canvas, theBSplineCurve){
 	this.toggleRenderMode = 1;
 
 	this.adaptiveSign.innerHTML = "(a) Render mode = Adaptive";
-	this.tesselationSign.innerHTML = "(+/-) Tesselation = " + this.theBSplineCurve.tesselate;  
+	this.tesselationSign.innerHTML = "(i/d) Tesselation = " + this.theBSplineCurve.tesselate;  
 	this.showSamplesSign.innerHTML = "(p) Show samples = False";
 	this.showPolygonSign.innerHTML = "(c) Show control polygon = True ";
 	window.addEventListener( "keydown", this.keyManager.bind(this), false );
@@ -47,6 +49,42 @@ CanvasManager.prototype = {
 		}
 		this.theBSplineCurve.centerAllPoints();
 		this.renderBSpline();
+	},
+
+	loadFileAction: function(e){
+		this.clearCanvas();
+
+		this.theBSplineCurve = new BSplineCurve();
+
+		var input = e.target;
+
+		var reader = new FileReader();
+
+		var _this = this;
+
+		reader.onload = function(){
+			var fileInput = reader.result;
+
+			var lines = fileInput.match(/[^\r\n]+/g);
+
+			_this.theBSplineCurve.setDegree(parseFloat(lines[0]))
+			_this.theBSplineCurve.setNumOfCtrlPoints(parseFloat(lines[1]))
+
+			var knots = lines[2].match(/\S+/g);
+			for (var i = 0; i < knots.length; i++) {
+				_this.theBSplineCurve.addKnot(parseFloat(knots[i]));
+			};
+
+			for(var i = 3; i<lines.length; i++){
+				var ctrlPoint = lines[i].match(/\S+/g);
+				_this.theBSplineCurve.addCtrlPointCoords(parseFloat(ctrlPoint[0]),parseFloat(ctrlPoint[1]))
+			}
+			_this.theBSplineCurve.centerAllPoints();
+			_this.renderBSpline();
+		};
+
+		reader.readAsText(input.files[0]);
+
 	},
 
 	renderBSpline: function(){
@@ -99,17 +137,18 @@ CanvasManager.prototype = {
 	},
 
 	keyManager: function(e){
-		if(e.keyCode == 171){
+		console.log(e.keyCode);
+		if(e.keyCode == 73){
 			this.theBSplineCurve.tesselateUp();
 			this.clearCanvas();
 			this.renderBSpline();
-			this.tesselationSign.innerHTML = "(+/-) Tesselation = " + this.theBSplineCurve.tesselate; 
+			this.tesselationSign.innerHTML = "(i/d) Tesselation = " + this.theBSplineCurve.tesselate; 
 		}
-		if(e.keyCode == 173){
+		if(e.keyCode == 68){
 			this.theBSplineCurve.tesselateDown();
 			this.clearCanvas();
 			this.renderBSpline();
-			this.tesselationSign.innerHTML = "(+/-) Tesselation = " + this.theBSplineCurve.tesselate; 
+			this.tesselationSign.innerHTML = "(i/d) Tesselation = " + this.theBSplineCurve.tesselate; 
 		}
 		if(e.keyCode == 67){
 			if(this.showControlPolygon){

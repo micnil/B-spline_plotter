@@ -40,7 +40,7 @@ BSplineCurve.prototype = {
 
 		for(var i = 0; i<this.numOfCtrlPoints; i++){
 			var ctrlPoint = new paper.Path.Circle(this.ctrlPoints[i], this.ctrlPointSize);
-			ctrlPoint.fillColor = 'blue';
+			ctrlPoint.fillColor = '#268bd2';
 		}
 
 	},
@@ -52,7 +52,7 @@ BSplineCurve.prototype = {
 			// Create a Paper.js Path to draw a line into it:
 			var path = new paper.Path();
 			// Give the stroke a color
-			path.strokeColor = 'black';
+			path.strokeColor = '#657b83';
 			var start = this.ctrlPoints[i];
 			// Move to start and draw a line from there
 			path.moveTo(start);

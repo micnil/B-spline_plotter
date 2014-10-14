@@ -160,7 +160,7 @@ BezierCurve.prototype = {
 		// Create a Paper.js Path to draw a line into it:
 		var path = new paper.Path();
 		// Give the stroke a color
-		path.strokeColor = 'red';
+		path.strokeColor = '#dc322f';
 		path.moveTo(p1);
 		path.lineTo(p2);
 
@@ -208,7 +208,7 @@ BezierCurve.prototype = {
 			// Create a Paper.js Path to draw a line into it:
 			var path = new paper.Path();
 			// Give the stroke a color
-			path.strokeColor = 'red';
+			path.strokeColor = '#dc322f';
 			var start = this.ctrlPoints[i];
 			// Move to start and draw a line from there
 			path.moveTo(start);
@@ -220,7 +220,7 @@ BezierCurve.prototype = {
 
 		for(var i = 0; i<this.numOfCtrlPoints; i++){
 			var ctrlPoint = new paper.Path.Circle(this.ctrlPoints[i], 2);
-			ctrlPoint.fillColor = 'purple';
+			ctrlPoint.fillColor = '#6c71c4';
 		}
 	},
 
@@ -231,7 +231,7 @@ BezierCurve.prototype = {
 
 	drawPoint: function(p){
 			var point = new paper.Path.Circle(p, 1.5);
-			point.fillColor = 'purple';
+			point.fillColor = '#6c71c4';
 	},
 
 }

@@ -19,9 +19,14 @@
 
 	<div id="gui">
         <div class="menubox">
-            <p class="menutitle">load B-spline txt file</p>
-            <textarea  id="fileInput" rows="10" cols="30" placeholder="copy text file here"></textarea>
-            <button type="button" id="loadBtn" class="myButton" value="load">load</button>
+            <div id="textAreaBox">
+                <p class="menutitle">load B-spline txt file</p>
+                <textarea  id="fileInput" rows="10" cols="30" placeholder="copy text file here"></textarea>
+            </div>
+            <div id="buttonBox">
+                <button type="button" id="loadBtn" class="myButton" value="load">load</button>
+                <input id="loadFile" type='file' accept='text/plain'>
+            </div>
         </div>
     </div>
     <div id="infoBox">
