@@ -3,13 +3,13 @@ function CanvasManager(canvas, theBSplineCurve){
 	this.curveCanvas = canvas;
 
 	this.theBSplineCurve = theBSplineCurve;
-	this.loadBtn = document.getElementById('loadBtn');
+	//this.loadBtn = document.getElementById('loadBtn');
 	this.adaptiveSign = document.getElementById('adaptive');
 	this.tesselationSign = document.getElementById('tesselation');
 	this.showSamplesSign = document.getElementById('showSamples');
 	this.showPolygonSign = document.getElementById('showPolygon');
 	this.loadFile = document.getElementById('loadFile');
-	this.loadBtn.addEventListener('click', this.loadBtnAction.bind(this),false);
+	//this.loadBtn.addEventListener('click', this.loadBtnAction.bind(this),false);
 	this.loadFile.addEventListener('change', this.loadFileAction.bind(this),false);
 
 	//states
@@ -26,7 +26,7 @@ function CanvasManager(canvas, theBSplineCurve){
 }
 CanvasManager.prototype = {
 
-	loadBtnAction: function(){
+	/*loadBtnAction: function(){
 
 		this.clearCanvas();
 
@@ -49,7 +49,7 @@ CanvasManager.prototype = {
 		}
 		this.theBSplineCurve.centerAllPoints();
 		this.renderBSpline();
-	},
+	}, */
 
 	loadFileAction: function(e){
 		this.clearCanvas();
