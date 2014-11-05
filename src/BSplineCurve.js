@@ -88,10 +88,6 @@ BSplineCurve.prototype = {
 			        //here the tesselate value will be used as number of samplingpoints
 					bezierCurve.renderUniform(this.tesselate, showSamplingPoints);
 			        break;
-			    case 3:
-			    	//This is a bad Brute force way of rendering, unstable
-			    	bezierCurve.renderBruteForce(this.tesselate, showSamplingPoints);
-			    	break;
 			} 
 	}
 
@@ -155,7 +151,7 @@ BSplineCurve.prototype = {
 			// update knots
 			for (i=0; i<j; i++)
 				knots[i] = knots[i+1];
-				knots[j] = knots[k];
+			knots[j] = knots[k];
 		}
 
 		// insert knots to make the right end be Bezier end
@@ -186,6 +182,72 @@ BSplineCurve.prototype = {
 		bezierCurve.setMinDistance(this.tesselate);
 		return bezierCurve;
 
+	},
+
+	renderDeBoor: function()
+	{
+		var begin = this.knots[this.degree];
+		var end = this.knots[this.numOfCtrlPoints];
+		var samplingPoints = new Array();
+		var k = this.degree;
+		var degree = this.degree;
+		var u = 0;
+
+		for(var i=0; i<this.tesselate; i++)
+		{
+			u = (begin + i*(end-begin)/tesselate);
+			samplingPoints.push(deBoor(u));
+		}
+	},
+
+	deBoor: function(u)
+	{
+		var knots = this.knots;
+		var h = 0;
+		var s = 0;
+		var p = this.degree;
+		var k;
+		for(k = 0; k<(this.degree + this.numOfCtrlPoints + 1); k++)
+		{
+			if(u>=knots[k] && u<=knots[k+1])
+			{
+				if(u == knots[k])
+				{
+					//check multiplicity of knots[k]
+					while(knots[k+s] == knots[k+s+1])
+						s++;
+					s++;
+
+					h = (p-s)>0 ? p-s : 0;
+				}
+				else
+				{
+					h = p;
+					s = 0;
+				}
+				break;
+			}
+		}
+		//copy relevant control points
+		var ctrlPoints = [new Array(), new array()];
+		for (j=k-p+1; j<=k+1; j++)
+			ctrlPoints.push(this.ctrlPoints[j][0]);
+		
+
+
+/*		If u lies in [uk,uk+1) and u != uk, let h = p (i.e., inserting u p times) and s = 0;
+		If u = uk and uk is a knot of multiplicity s, let h = p - s (i.e., inserting u p - s times);
+		Copy the affected control points Pk-s, Pk-s-1, Pk-s-2, ..., Pk-p+1 and Pk-p to a new array and rename them as Pk-s,0, Pk-s-1,0, Pk-s-2,0, ..., Pk-p+1,0;
+
+		for r := 1 to h do
+
+			for i := k-p+r to k-s do
+				begin
+					Let ai,r = (u - ui) / ( ui+p-r+1 - ui )
+					Let Pi,r = (1 - ai,r) Pi-1,r-1 + ai,r Pi,r-1
+				end
+
+		Pk-s,p-s is the point C(u). */
 	},
 
 }

@@ -8,7 +8,6 @@ function BezierCurve(d, c, m){
 BezierCurve.prototype = {
 
 	renderAdaptive: function(tolerance, showSamplingPoints){
-		//casteljau algorithm
 
 		var height = this.maxDistance();
 		if (height < tolerance) {
@@ -41,6 +40,7 @@ BezierCurve.prototype = {
 			var leftBez = new BezierCurve();
 			var rightBez = new BezierCurve();
 			var n;
+
 			n=this.numOfCtrlPoints+1;
 			for(var i = 0; n > 1; i=i+n){
 				leftBez.addCtrlPoint(midPoints[i]);
@@ -58,48 +58,6 @@ BezierCurve.prototype = {
 		}
 
 	},
-	//Brute force Sampling
-	renderBruteForce: function(numOfSamplingPoints, showSamplingPoints){
-
-		var samplingStep = 1/numOfSamplingPoints;
-
-		var samplingPoints = new Array();
-		var t=0;
-		console.log(this.ctrlPoints);
-		while(t<=1.0){
-			
-			var x = this.ctrlPoints[0].x * this.B1(t) + this.ctrlPoints[1].x * this.B2(t); 
-			var y = this.ctrlPoints[0].y * this.B1(t) + this.ctrlPoints[1].y * this.B2(t);
-
-			if(this.ctrlPoints[2]){
-				x = x + this.ctrlPoints[2].x * this.B3(t);
-				y = y + this.ctrlPoints[2].y * this.B3(t);
-			}
-
-			if(this.ctrlPoints[3]){
-				x = x + this.ctrlPoints[3].x * this.B4(t);
-				y = y + this.ctrlPoints[3].y * this.B4(t);
-			}
-
-			samplingPoints.push(new paper.Point(x,y));
-
-			t=t+samplingStep;
-		}
-		for(var i = 0; i<samplingPoints.length-1; i++){
-			this.drawLine(samplingPoints[i],samplingPoints[i+1])
-		}
-		if(showSamplingPoints){
-			for(var i = 0; i<samplingPoints.length; i++){
-				this.drawPoint(samplingPoints[i]);
-			}
-		}
-
-	},
-
-	B1: function(t) { return t*t*t },
-	B2: function(t) { return 3*t*t*(1-t) },
-	B3: function(t) { return 3*t*(1-t)*(1-t) },
-	B4: function(t) { return (1-t)*(1-t)*(1-t) },
 
 	renderUniform: function(numOfSamplingPoints, showSamplingPoints){
 
@@ -141,18 +99,12 @@ BezierCurve.prototype = {
 	},
 
 	getMidPoint: function(p1, p2){
-		var midPoint;
+		var midPoint = new paper.Point();
 
-		midPoint = (p2.subtract(p1)).divide(2);
-		midPoint = p1.add(midPoint);
+		//lerp t=0.5
+		midPoint.x = p1.x*0.5 + p2.x * 0.5;
+		midPoint.y = p1.y*0.5 + p2.y * 0.5;
 		return midPoint;
-
-	},
-
-	midSubdivide: function(){
-
-
-
 	},
 
 	drawLine: function(p1, p2){
