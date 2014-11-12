@@ -10,8 +10,8 @@ function main(){
 	// Create an empty project and a view for the canvas:
 	paper.setup(canvas);
 
-	var theBSplineCurve = new BSplineCurve();
-	var canvasManager = new CanvasManager(canvas, theBSplineCurve);
+	//var theBSplineCurve = new BSplineCurve();
+	var canvasManager = new CanvasManager(canvas);
 	canvasManager.drawCoordinateSystem();	
 }
 

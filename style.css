@@ -57,8 +57,13 @@ textarea{
 	text-align:center;
 	border-radius: 5px;
 	float:left;
+	clear:both;
 	overflow:hidden;
     white-space:nowrap;
     display:inline-block;
 
+}
+
+input[type="number"] {
+   width:40px;
 }

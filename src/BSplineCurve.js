@@ -17,15 +17,18 @@ BSplineCurve.prototype = {
 		this.numOfCtrlPoints = num;
 	},
 
-	addKnot: function(knot) {
-
-		this.knots.push(knot)
-
+	addKnot: function(knot) 
+	{
+		this.knots.push(knot);
+		this.knots.sort(this.sortNumber);
+	},
+	sortNumber: function (a,b) {
+    	return a - b;
 	},
 
 	addCtrlPointCoords: function(x, y) {
+
 		this.ctrlPoints.push(new paper.Point(x,y));
-		//this.numOfCtrlPoints++;
 	},
 
 	addCtrlPoint: function(paperPoint) {
@@ -33,10 +36,17 @@ BSplineCurve.prototype = {
 		this.ctrlPoints.push(paperPoint);
 		this.numOfCtrlPoints++;
 
+		//Fix knot vector
+		if(this.numOfCtrlPoints)
+		this.knots.splice(this.knots.length-this.degree,this.degree);
+		for(var i = 0; i<this.degree; i++){
+			this.knots.push(this.numOfCtrlPoints + i + 1);
+		}
+		
+		this.addKnot(this.numOfCtrlPoints);
 	},
 
 	drawControlPoints: function(){
-
 
 		for(var i = 0; i<this.numOfCtrlPoints; i++){
 			var ctrlPoint = new paper.Path.Circle(this.ctrlPoints[i], this.ctrlPointSize);
