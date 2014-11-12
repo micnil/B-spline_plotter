@@ -9,6 +9,8 @@ function CanvasManager(canvas, theBSplineCurve){
 	this.showSamplesSign = document.getElementById('showSamples');
 	this.showPolygonSign = document.getElementById('showPolygon');
 	this.loadFile = document.getElementById('loadFile');
+	this.tool = new paper.Tool();
+		
 	//this.loadBtn.addEventListener('click', this.loadBtnAction.bind(this),false);
 	this.loadFile.addEventListener('change', this.loadFileAction.bind(this),false);
 
@@ -22,34 +24,10 @@ function CanvasManager(canvas, theBSplineCurve){
 	this.showSamplesSign.innerHTML = "(p) Show samples = False";
 	this.showPolygonSign.innerHTML = "(c) Show control polygon = True ";
 	window.addEventListener( "keydown", this.keyManager.bind(this), false );
+	this.tool.onMouseDown = this.onMouseDown;
 
 }
 CanvasManager.prototype = {
-
-	/*loadBtnAction: function(){
-
-		this.clearCanvas();
-
-		this.theBSplineCurve = new BSplineCurve();
-		var fileInput = document.getElementById('fileInput').value;
-
-		var lines = fileInput.match(/[^\r\n]+/g);
-
-		this.theBSplineCurve.setDegree(parseFloat(lines[0]))
-		this.theBSplineCurve.setNumOfCtrlPoints(parseFloat(lines[1]))
-
-		var knots = lines[2].match(/\S+/g);
-		for (var i = 0; i < knots.length; i++) {
-			this.theBSplineCurve.addKnot(parseFloat(knots[i]));
-		};
-
-		for(var i = 3; i<lines.length; i++){
-			var ctrlPoint = lines[i].match(/\S+/g);
-			this.theBSplineCurve.addCtrlPointCoords(parseFloat(ctrlPoint[0]),parseFloat(ctrlPoint[1]))
-		}
-		this.theBSplineCurve.centerAllPoints();
-		this.renderBSpline();
-	}, */
 
 	loadFileAction: function(e){
 		this.clearCanvas();
@@ -94,7 +72,7 @@ CanvasManager.prototype = {
 			this.theBSplineCurve.drawControlPoints();
 		}
 		this.theBSplineCurve.renderBSpline(this.showSamplingPoints, this.toggleRenderMode);
-
+		//this.theBSplineCurve.renderDeBoor();
 		// Draw the view now:
 		paper.view.draw();
 	},
@@ -179,7 +157,7 @@ CanvasManager.prototype = {
 			}
 		}
 		if(e.keyCode == 65){
-			if(this.toggleRenderMode==2){
+			if(this.toggleRenderMode==3){
 				this.toggleRenderMode = 1;
 				this.clearCanvas();
 				this.renderBSpline();
@@ -191,6 +169,21 @@ CanvasManager.prototype = {
 				this.renderBSpline();
 				this.adaptiveSign.innerHTML = "(a) Render mode: Uniform";
 			}
+			else if(this.toggleRenderMode==2){
+				this.toggleRenderMode = 3;
+				this.clearCanvas();
+				this.renderBSpline();
+				this.adaptiveSign.innerHTML = "(a) Render mode: De Boor";
+			}
 		}
+	},
+	onMouseDown: function (event) {
+		// Create a new circle shaped path at the position
+		// of the mouse:
+		var path = new paper.Path.Circle(event.point, 5);
+		path.fillColor = 'black';
+
+		// Add the path to the group's children list:
+		//group.addChild(path);
 	}
 }

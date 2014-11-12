@@ -81,7 +81,6 @@ BezierCurve.prototype = {
 				}
 			}
 
-			console.log(q[0]);
 			//------------------------------------
 			samplingPoints.push(new paper.Point(q[0].x,q[0].y));
 			t=t+samplingStep;
