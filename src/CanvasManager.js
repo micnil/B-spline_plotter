@@ -6,6 +6,7 @@ function CanvasManager(canvas){
 
 	this.numOfSplines = 0;
 	this.activeSplineIndex = 0;
+	this.selectedPoint;
 	
 	//this.loadBtn = document.getElementById('loadBtn');
 	this.adaptiveSign = document.getElementById('adaptive');
@@ -31,6 +32,7 @@ function CanvasManager(canvas){
 	this.showSamplingPoints = false;
 	this.toggleRenderMode = 1;
 	this.createMode = false;
+	this.dragState=false;
 
 	this.adaptiveSign.innerHTML = "(r) Render mode = Adaptive";
 	this.tesselationSign.innerHTML = "(u/d) Tesselation = 10";  
@@ -41,6 +43,8 @@ function CanvasManager(canvas){
 	//this.curveCanvas.addEventListener( "mousedown", this.onMouseDown.bind(this), false );
 	this.inputTool.onMouseDown = this.onMouseDown.bind(this);
 	this.inputTool.onKeyUp = this.keyManager.bind(this);
+	this.inputTool.onMouseMove = this.movePoint.bind(this);
+	this.inputTool.onMouseUp = this.onMouseUp.bind(this);
 
 }
 CanvasManager.prototype = {
@@ -236,13 +240,55 @@ CanvasManager.prototype = {
 	},
 
 	onMouseDown: function (event) {
-		this.curveCanvas.focus();
-		if(this.createMode)
+		this.curveCanvas.focus()
+		var hitResult = paper.project.hitTest(event.point,{ fill: true, stroke: true, segments: false, tolerance: true });
+		if(hitResult && hitResult.item.name == "ctrlPoint")
+		{
+			hitResult.item.fillColor = 'red';
+
+			//find the corresponding ctrlpoint
+			for(var i = 0; i<this.BSplineCurves.length; i++)
+			{
+				for(var j = 0; j<this.BSplineCurves[i].ctrlPoints.length; j++)
+				{
+					if(hitResult.item.contains(this.BSplineCurves[i].ctrlPoints[j]))
+					{
+						this.selectedPoint = this.BSplineCurves[i].ctrlPoints[j];
+						this.dragState = true;
+					}
+				}
+			}
+		}
+		else if(this.createMode)
 		{
 			this.BSplineCurves[this.activeSplineIndex].addCtrlPoint( event.point );//this.getMousePoint(event) 
 			this.clearCanvas();
 			this.renderBSplines();
 		}
+
+
+	},
+
+	movePoint: function (event)
+	{
+		if(this.dragState)
+		{
+
+			this.selectedPoint.x = this.selectedPoint.x + event.delta.x; 
+			this.selectedPoint.y = this.selectedPoint.y + event.delta.y; 
+
+			this.clearCanvas();
+			this.renderBSplines();	
+		}
+		
+
+	},
+
+	onMouseUp: function(event)
+	{
+		console.log("hej");
+		this.dragState=false;
+		this.selectedPoint=null;
 	},
 
 	/*getMousePoint : function(event) {

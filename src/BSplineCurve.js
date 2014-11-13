@@ -51,6 +51,7 @@ BSplineCurve.prototype = {
 		for(var i = 0; i<this.numOfCtrlPoints; i++){
 			var ctrlPoint = new paper.Path.Circle(this.ctrlPoints[i], this.ctrlPointSize);
 			ctrlPoint.fillColor = '#268bd2';
+			ctrlPoint.name = 'ctrlPoint';
 		}
 
 	},
