@@ -19,32 +19,34 @@
 
 	<div id="gui">
         <div class="menubox">
-            <div id="textAreaBox">
+            <div class="textAreaBox">
                 <p class="menutitle">load B-spline txt file</p>
             </div>
-            <div id="buttonBox">
+            <div class="buttonBox">
                 <input id="loadFile" type='file' accept='text/plain'>
             </div>
         </div>
         <div class="menubox">
-            <div id="textAreaBox">
-                <p class="menutitle">Clear the canvas</p>
+            <div class="textAreaBox">
+                <p class="menutitle">Create new curve</p>
             </div>
-            <div id="buttonBox">
-                    <button id="clearBtn" type='button'>Clear</button>
+            <div class="buttonBox">
+                Degree:
+                <input type="number" id="degreeField" name="degree" min="1" max="5" size="2" value="3">
+            </div>
+            <div class="buttonBox">
+                    <button id="startBtn" type='button'>Start</button>
+            </div>
+            <div class="buttonBox">
+                    <button id="endBtn" type='button' disabled = "true">End</button>
             </div>
         </div>
         <div class="menubox">
-            <div id="textAreaBox">
-                <p class="menutitle">Create new curve</p>
+            <div class="textAreaBox">
+                <p class="menutitle">Clear the canvas</p>
             </div>
-            Degree
-            <input type="number" id="degreeField" name="degree" min="1" max="5" size="2" value="3">
-            <div id="buttonBox">
-                    <button id="startBtn" type='button'>Start</button>
-            </div>
-            <div id="buttonBox">
-                    <button id="endBtn" type='button' disabled = "true">End</button>
+            <div class="buttonBox">
+                    <button id="clearBtn" type='button'>Clear</button>
             </div>
         </div>
     </div>

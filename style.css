@@ -3,10 +3,6 @@ body{
 	overflow: hidden;
 }
 
-textarea{
-	resize: both
-}
-
 #myCanvas{
 	background: #fdf6e3;
 	position: absolute;
@@ -28,12 +24,7 @@ textarea{
 	border: 1px solid #1a1a1a;
 	textShadow: 1px 1px 0 #222;
 }
-#buttonBox{
-	float: left;
-}
-#textAreaBox{
-	
-}
+
 #infoBox{
 	margin:10px;
 	width:18%;
@@ -42,10 +33,17 @@ textarea{
 	z-index: 2;
 	color: #268bd2;
 }
-
+.buttonBox{
+	float: left;
+	margin-left: 5px
+}
+.textAreaBox{
+	text-align:center;
+}
 .menutitle{
 	margin:0.2em;
 	padding:0.2em;
+	text-align:center;
 }
 .menutext{
 	margin-top: 0.8em;
@@ -61,6 +59,7 @@ textarea{
 	overflow:hidden;
     white-space:nowrap;
     display:inline-block;
+    width:100%;
 
 }
 

@@ -87,7 +87,7 @@ BSplineCurve.prototype = {
 
 		if(toggleRenderMode == 3)
 		{
-			this.renderDeBoor();
+			this.renderDeBoor(showSamplingPoints);
 		}
 		else
 		{
@@ -200,7 +200,7 @@ BSplineCurve.prototype = {
 
 	},
 
-	renderDeBoor: function()
+	renderDeBoor: function(showSamplingPoints)
 	{
 		var begin = this.knots[this.degree];
 		var end = this.knots[this.numOfCtrlPoints]-0.001;
@@ -223,12 +223,25 @@ BSplineCurve.prototype = {
 			samplingPoints.push(this.deBoor(h, k, u));
 			i++;
 		}
-	
-		//Draw curve
-		for(var i = 0; i<samplingPoints.length-1;i++)
+		
+		//draw curve
+		var path = new paper.Path();
+		path.strokeColor = '#dc322f';
+		for(var i = 0; i<samplingPoints.length;i++)
 		{
-			this.drawLine(samplingPoints[i],samplingPoints[i+1]);
+			path.add(samplingPoints[i])
 		}
+
+		//draw samplingpoints if requested
+		if(showSamplingPoints)
+		{
+		for(var i = 0; i<samplingPoints.length;i++)
+			{
+				var circle = new paper.Path.Circle(samplingPoints[i], 1.5);
+				circle.fillColor = '#6c71c4';
+			}
+		}
+
 	},
 
 	deBoor: function(h, i, u)
@@ -243,16 +256,5 @@ BSplineCurve.prototype = {
 			var alpha = (u-this.knots[i])/(this.knots[i+this.degree+1-h]-this.knots[i]);
 			return ((this.deBoor(h-1, i-1, u).multiply(1-alpha )).add(this.deBoor(h-1, i, u).multiply(alpha)) );
 		}
-	},
-
-	drawLine: function(p1, p2){
-
-		// Create a Paper.js Path to draw a line into it:
-		var path = new paper.Path();
-		// Give the stroke a color
-		path.strokeColor = '#dc322f';
-		path.moveTo(p1);
-		path.lineTo(p2);
-
 	},
 }

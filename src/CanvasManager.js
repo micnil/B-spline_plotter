@@ -1,7 +1,7 @@
 function CanvasManager(canvas){
 
 	this.curveCanvas = canvas;
-
+	this.curveCanvas.setAttribute('tabindex','0');
 	this.BSplineCurves = new Array();
 
 	this.numOfSplines = 0;
@@ -32,8 +32,8 @@ function CanvasManager(canvas){
 	this.toggleRenderMode = 1;
 	this.createMode = false;
 
-	this.adaptiveSign.innerHTML = "(a) Render mode = Adaptive";
-	this.tesselationSign.innerHTML = "(i/d) Tesselation = 10";  
+	this.adaptiveSign.innerHTML = "(r) Render mode = Adaptive";
+	this.tesselationSign.innerHTML = "(u/d) Tesselation = 10";  
 	this.showSamplesSign.innerHTML = "(p) Show samples = False";
 	this.showPolygonSign.innerHTML = "(c) Show control polygon = True ";
 	//window.addEventListener( "keydown", this.keyManager.bind(this), false );
@@ -141,19 +141,19 @@ CanvasManager.prototype = {
 
 	keyManager: function(event){
 		console.log(event.key);
-		if(event.keyCode == 73){
+		if(event.key == "u" && this.BSplineCurves.length>0){ //73
 			this.BSplineCurves[this.numOfSplines-1].tesselateUp();
 			this.clearCanvas();
 			this.renderBSplines();
-			this.tesselationSign.innerHTML = "(i/d) Tesselation = " + this.BSplineCurves[this.numOfSplines-1].tesselate; 
+			this.tesselationSign.innerHTML = "(u/d) Tesselation = " + this.BSplineCurves[this.numOfSplines-1].tesselate; 
 		}
-		if(event.keyCode == 68){
+		if(event.key == "d" && this.BSplineCurves.length>0){ //68
 			this.BSplineCurves[this.numOfSplines-1].tesselateDown();
 			this.clearCanvas();
 			this.renderBSplines();
-			this.tesselationSign.innerHTML = "(i/d) Tesselation = " + this.BSplineCurves[this.numOfSplines-1].tesselate; 
+			this.tesselationSign.innerHTML = "(u/d) Tesselation = " + this.BSplineCurves[this.numOfSplines-1].tesselate; 
 		}
-		if(event.keyCode == 67){
+		if(event.key == "c"){ //67
 			if(this.showControlPolygon){
 				this.showControlPolygon = false;
 				this.clearCanvas();
@@ -167,7 +167,7 @@ CanvasManager.prototype = {
 				this.showPolygonSign.innerHTML = "(c) Show control polygon = True ";
 			}
 		}
-		if(event.keyCode == 80){
+		if(event.key == "p"){ //80
 			if(this.showSamplingPoints){
 				this.showSamplingPoints = false;
 				this.clearCanvas();
@@ -181,24 +181,24 @@ CanvasManager.prototype = {
 				this.showSamplesSign.innerHTML = "(p) Show samples = True";
 			}
 		}
-		if(event.keyCode == 65){
+		if(event.key == "r"){ //65
 			if(this.toggleRenderMode==3){
 				this.toggleRenderMode = 1;
 				this.clearCanvas();
 				this.renderBSplines();
-				this.adaptiveSign.innerHTML = "(a) Render mode: Adaptive";
+				this.adaptiveSign.innerHTML = "(r) Render mode: Adaptive";
 			}
 			else if(this.toggleRenderMode==1){
 				this.toggleRenderMode = 2;
 				this.clearCanvas();
 				this.renderBSplines();
-				this.adaptiveSign.innerHTML = "(a) Render mode: Uniform";
+				this.adaptiveSign.innerHTML = "(r) Render mode: Uniform";
 			}
 			else if(this.toggleRenderMode==2){
 				this.toggleRenderMode = 3;
 				this.clearCanvas();
 				this.renderBSplines();
-				this.adaptiveSign.innerHTML = "(a) Render mode: De Boor";
+				this.adaptiveSign.innerHTML = "(r) Render mode: De Boor";
 			}
 		}
 	},
@@ -208,6 +208,7 @@ CanvasManager.prototype = {
 		this.BSplineCurves = new Array();
 		this.numOfSplines = 0;
 		this.clearCanvas();
+		this.curveCanvas.focus();
 	},
 
 	createSpline: function()
@@ -223,6 +224,8 @@ CanvasManager.prototype = {
 
 		for(var i = 0; i<this.BSplineCurves[this.activeSplineIndex].degree; i++)
 			this.BSplineCurves[this.activeSplineIndex].addKnot(i);
+
+		this.curveCanvas.focus();
 	},
 
 	stopCreateSpline: function()
@@ -233,7 +236,7 @@ CanvasManager.prototype = {
 	},
 
 	onMouseDown: function (event) {
-
+		this.curveCanvas.focus();
 		if(this.createMode)
 		{
 			this.BSplineCurves[this.activeSplineIndex].addCtrlPoint( event.point );//this.getMousePoint(event) 
